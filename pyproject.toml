@@ -7,6 +7,8 @@ authors = ["Thilakaraj K <nmrkthilakraj@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.9"
 djangorestframework = "^3.12.2"
+Django = "^3.1.6"
+psycopg2 = "^2.8.6"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
