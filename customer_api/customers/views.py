@@ -1,6 +1,3 @@
-from django.shortcuts import render
-from django.test.testcases import TestCase
-from django.urls.base import reverse
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -22,9 +19,14 @@ def get_delete_update_customer(request, pk):
         serializer = CustomerSerializer(customer)
         return Response(serializer.data)
     elif request.method == 'PUT':
-        return Response({})
+        serializer = CustomerSerializer(customer, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors,  status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
-        return Response({})
+        customer.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET', 'POST'])

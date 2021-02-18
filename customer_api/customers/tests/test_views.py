@@ -98,3 +98,65 @@ class CreateNewCustomerTest(TestCase):
                                data=json.dumps(self.invalid),
                                content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class UpdateSingleCustomer(TestCase):
+    """
+    Test module for PUT customer API
+    """
+
+    def setUp(self) -> None:
+        self.john = Customer.objects.create(name="John Doe", first_name="John",
+                                            last_name="Doe", age=24, email='john.doe@xyz.com')
+        self.david = Customer.objects.create(name="David Williams", first_name="David",
+                                             last_name="Williams", age=32,
+                                             email='david.williams@xyz.com')
+
+        self.valid_payload = {
+            "name": "John Doe",
+            "first_name": "John",
+            "last_name": "Doe",
+            "age": 12,
+            "email": "john.doe@xyz.com"
+        }
+        self.invalid_payload = {
+            "name": "",
+            "first_name": "David",
+            "last_name": "Williams",
+            "age": 22,
+            "email": "david.williams@xyz.com"
+        }
+
+    def test_valid_customer_update(self):
+        response = client.put(
+            reverse('get_delete_update_customer', kwargs={"pk": self.john.pk}),
+            data=json.dumps(self.valid_payload), content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_invalid_update_customer(self):
+        response = client.put(reverse('get_delete_update_customer', kwargs={"pk": self.david.pk}),
+                              data=json.dumps(self.invalid_payload), content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class DeleteSingleCustomer(TestCase):
+    """
+    Test module for DELETE API
+    """
+
+    def setUp(self) -> None:
+        self.john = Customer.objects.create(name="John Doe", first_name="John",
+                                            last_name="Doe", age=24, email='john.doe@xyz.com')
+        self.david = Customer.objects.create(name="David Williams", first_name="David",
+                                             last_name="Williams", age=32,
+                                             email='david.williams@xyz.com')
+
+    def test_delete_valid_customer(self):
+        response = client.delete(
+            reverse("get_delete_update_customer", kwargs={"pk": self.john.pk}))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_delete_invalid_customer(self):
+        response = client.delete(
+            reverse("get_delete_update_customer", kwargs={"pk": 30}))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
