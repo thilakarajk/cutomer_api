@@ -1,13 +1,32 @@
 import json
 
+import requests
 from django.test import Client, TestCase, client
 from django.urls import reverse
 from rest_framework import status
+from rest_framework.test import APIClient
 
 from ..models import Customer
 from ..serializers import CustomerSerializer
 
 client = Client()
+user_payload = {
+    "first_name": "Bruce",
+    "last_name": "Williams",
+    "password": '1234',
+    "email": "bruce.williams@xyz.com"
+}
+client.post(reverse('create_user'), data=json.dumps(
+    user_payload), content_type='application/json')
+
+PAYLOAD = {"email": "bruce.williams@xyz.com", "password": "1234"}
+TOKEN = client.post(reverse("authenticate_user"), data=json.dumps(
+    PAYLOAD), content_type='application/json')
+TOKEN = TOKEN.json()['token']
+HEADERS = {"HTTP_AUTHORIZATION": f"Bearer {TOKEN}"}
+print(HEADERS)
+
+# client.defaults["HTTP_AUTHORIZATION"] = f"Bearer {TOKEN}"
 
 
 class GetAllCustomersTest(TestCase):
@@ -86,17 +105,19 @@ class CreateNewCustomerTest(TestCase):
             "age": 32,
             "email": "john.doe@xyz.com"
         }
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {TOKEN}")
 
     def test_create_valid_customer(self):
-        response = client.post(reverse("get_post_customer"),
-                               data=json.dumps(self.valid),
-                               content_type='application/json')
+        response = self.client.post(reverse("get_post_customer"),
+                                    data=json.dumps(self.valid),
+                                    content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_create_invalid_customer(self):
-        response = client.post(reverse("get_post_customer"),
-                               data=json.dumps(self.invalid),
-                               content_type='application/json')
+        response = self.client.post(reverse("get_post_customer"),
+                                    data=json.dumps(self.invalid),
+                                    content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 

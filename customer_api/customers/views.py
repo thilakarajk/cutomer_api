@@ -1,5 +1,6 @@
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
 from .models import Customer
@@ -9,11 +10,13 @@ from .serializers import CustomerSerializer
 
 
 @api_view(['GET', "DELETE", 'PUT'])
+@permission_classes([IsAuthenticatedOrReadOnly, ])
 def get_delete_update_customer(request, pk):
     try:
         customer = Customer.objects.get(pk=pk)
     except Customer.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        res = {"status": "Customer does not exist"}
+        return Response(res, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         serializer = CustomerSerializer(customer)
@@ -26,10 +29,12 @@ def get_delete_update_customer(request, pk):
         return Response(serializer.errors,  status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         customer.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        res = {"status": "Deleted Successfully"}
+        return Response(res, status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticatedOrReadOnly, ])
 def get_post_customer(request):
     if request.method == 'GET':
         customers = Customer.objects.all()
