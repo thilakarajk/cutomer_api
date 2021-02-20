@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '+p$q$x+=rwbw=po5wu76gnio=#q8ro1sfy)%qxnp^6^q97e-go'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'users.User'
 
@@ -84,7 +84,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 123456789,
-        'HOST': '127.0.0.1',
+        'HOST': 'postgres',
         'PORT': '5432'
     }
 }
