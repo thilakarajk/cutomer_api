@@ -18,6 +18,7 @@ services:
 
   app:
     image: customer_api
+    build: .
     restart: always
     depends_on:
       postgres:
