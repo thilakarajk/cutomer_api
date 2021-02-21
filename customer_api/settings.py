@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 import datetime
+from os import environ
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -21,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '+p$q$x+=rwbw=po5wu76gnio=#q8ro1sfy)%qxnp^6^q97e-go'
+SECRET_KEY = environ["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -81,11 +82,11 @@ WSGI_APPLICATION = 'customer_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 123456789,
-        'HOST': 'postgres',
-        'PORT': '5432'
+        'NAME': environ['PG_DB'],
+        'USER': environ['PG_USER'],
+        'PASSWORD': environ['PG_PASSWORD'],
+        'HOST': environ['PG_HOST'],
+        'PORT': int(environ['PG_PORT'])
     }
 }
 
