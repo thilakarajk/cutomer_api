@@ -2,14 +2,11 @@ from datetime import datetime
 
 import jwt
 from django.conf import settings
-from django.contrib.auth import authenticate
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import check_password, make_password
 from django.contrib.auth.signals import user_logged_in
-from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -24,11 +21,18 @@ class CreateUserAPIView(APIView):
     permission_classes = (AllowAny,)
 
     def post(self, request):
-        user = request.data
-        serializer = UserSerializer(data=user)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        data = request.data
+        try:
+            User.objects.get(email=data['email'])
+            res = {
+                'error': 'User already registered'}
+            return Response(res, status=status.HTTP_409_CONFLICT)
+        except User.DoesNotExist:
+            data['password'] = make_password(data['password'])
+            serializer = UserSerializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
@@ -64,8 +68,8 @@ def authenticate_user(request):
         email = request.data['email']
         password = request.data['password']
 
-        user = User.objects.get(email=email, password=password)
-        if user:
+        user = User.objects.get(email=email)
+        if user and check_password(password, user.password):
             try:
                 payload = jwt_payload_handler(user)
                 token = jwt.encode(payload, settings.SECRET_KEY)
