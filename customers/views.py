@@ -1,5 +1,7 @@
+from drf_yasg.renderers import OpenAPIRenderer, SwaggerUIRenderer
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import (api_view, permission_classes,
+                                       renderer_classes)
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
@@ -11,6 +13,7 @@ from .serializers import CustomerSerializer
 
 @api_view(['GET', "DELETE", 'PUT'])
 @permission_classes([IsAuthenticatedOrReadOnly, ])
+@renderer_classes([SwaggerUIRenderer, OpenAPIRenderer])
 def get_delete_update_customer(request, pk):
     try:
         customer = Customer.objects.get(pk=pk)
@@ -35,6 +38,7 @@ def get_delete_update_customer(request, pk):
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticatedOrReadOnly, ])
+@renderer_classes([SwaggerUIRenderer, OpenAPIRenderer])
 def get_post_customer(request):
     if request.method == 'GET':
         customers = Customer.objects.all()
