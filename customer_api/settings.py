@@ -144,6 +144,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
     ),
 }
 
@@ -174,8 +175,7 @@ SWAGGER_SETTINGS = {
         'get',
         'post',
         'put',
-        'delete',
-        'patch'
+        'delete'
     ],
     'EXCLUDED_MEDIA_TYPES': []
 }
