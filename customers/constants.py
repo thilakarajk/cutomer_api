@@ -8,12 +8,12 @@ from .serializers import CustomerSerializer
 FIRST_NAME = Schema(title='First Name',
                     type=TYPE_STRING, description='First name of the Customer')
 LAST_NAME = Schema(type=TYPE_STRING, title='Last Name',
-                   description='Last name of the Customer'),
+                   description='Last name of the Customer')
 NAME = Schema(type=TYPE_STRING,
-              description='Full name of the Customer'),
-AGE = Schema(type=TYPE_INTEGER, description="Customer's age"),
+              description='Full name of the Customer')
+AGE = Schema(type=TYPE_INTEGER, description="Customer's age")
 EMAIL = Schema(type=TYPE_STRING,
-               description="Email address of the Customer"),
+               description="Email address of the Customer")
 
 # Error Message DEFINITIONS
 HTTP_404 = {'error': 'Customer does not exist'}

@@ -8,11 +8,11 @@ from .serializers import UserSerializer
 FIRST_NAME = openapi.Schema(
     type=openapi.TYPE_STRING, description='First name of the user')
 LAST_NAME = openapi.Schema(type=openapi.TYPE_STRING,
-                           description='Last name of the user'),
-AGE = openapi.Schema(type=openapi.TYPE_INTEGER, description="User's age"),
+                           description='Last name of the user')
+AGE = openapi.Schema(type=openapi.TYPE_INTEGER, description="User's age")
 EMAIL = openapi.Schema(type=openapi.TYPE_STRING,
-                       description="Email address of the user"),
-PASSWORD = openapi.Schema(type=openapi.TYPE_STRING, description="Password"),
+                       description="Email address of the user")
+PASSWORD = openapi.Schema(type=openapi.TYPE_STRING, description="Password")
 
 # Error Message DEFINITIONS
 HTTP_409 = {'error': 'User already registered'}
