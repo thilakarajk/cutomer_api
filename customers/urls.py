@@ -4,13 +4,13 @@ from . import views
 
 urlpatterns = [
     url(
-        r'^api/v1/customers/(?P<pk>[0-9]+)$',
-        views.get_delete_update_customer,
+        r'^customers/(?P<pk>[0-9]+)$',
+        views.GetDeleteUpdateCustomer.as_view(),
         name='get_delete_update_customer'
     ),
     url(
-        r'^api/v1/customers/$',
-        views.get_post_customer,
+        r'^customers/$',
+        views.GetPostCustomer.as_view(),
         name='get_post_customer'
     )
 ]

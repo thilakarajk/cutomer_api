@@ -21,7 +21,7 @@ RUN apk add --no-cache --virtual .build-deps \
     musl-dev \
     postgresql-dev \
     && pip install --no-cache-dir -r requirements.txt \
-    && apk del --no-cache .build-deps && apk add postgresql-libs
+    && apk del --no-cache .build-deps && apk add postgresql-libs net-tools
 COPY . .
 
 CMD [ "./docker-entrypoint.sh" ]
